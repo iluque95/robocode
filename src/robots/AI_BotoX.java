@@ -19,13 +19,30 @@ public class AI_BotoX extends Robot {
            turnRight(90);
        }
    }
-   public void onScannedRobot(ScannedRobotEvent e) {
-       fire(1);
-       scan();
-   }
+
    public void onHitByBullet(HitByBulletEvent e) {
        turnLeft(180);
-       // QUE PASA
+       
+   }
+   
+   public void onDetectedRobot() {
+       
+   }
+   
+   public void onScannedRobot(ScannedRobotEvent e) {
+       ramboMode();
+   }
+   
+   public void ramboMode() {
+       if(getEnergy() > 50) {
+            fire(2);
+            scan();
+            
+       }
+       else {
+            fire(1);
+            scan();
+       }       
    }
     
 }
