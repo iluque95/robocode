@@ -25,6 +25,7 @@ public class AI_BotoX extends Robot {
    }
    public void onHitByBullet(HitByBulletEvent e) {
        turnLeft(180);
+       // QUE PASA
    }
     
 }
