@@ -5,7 +5,7 @@
  */
 package robots;
 import robocode.*;
-import sun.awt.X11.XToolkit;
+import robocode.util.Utils;
 
 /**
  *
@@ -77,41 +77,32 @@ public class AI_BotoX extends AdvancedRobot {
        
        MAX_X = getBattleFieldWidth();
        MAX_Y = getBattleFieldHeight();
- 
-       LookAtFront();
- 
-       while(true) {
-           setAhead(10000);
-           setTurnRight(90);
-           if(ready == false) radarAction();
-           execute();
-       }
-   }
-
-   public void onHitByBullet(HitByBulletEvent e) {
-       setAhead(100);
-   }
-   
-   public void onDetectedRobot() {
+        
+       LookAtFront();        
        
+       setAdjustRadarForGunTurn(true);
+       
+       setTurnRadarRight(Double.POSITIVE_INFINITY);
+       setTurnGunRight(Double.POSITIVE_INFINITY);
+       
+       
+       while(true) {
+           scan();
+           execute();  
+       }
    }
    
+ 
    public void onScannedRobot(ScannedRobotEvent e) {
-       if(e.getDistance() < 500) {
-            ramboMode();
-       }
+       double radarTurn = getHeadingRadians() + e.getBearingRadians() - getRadarHeadingRadians();
+       
+       setTurnRadarRightRadians(Utils.normalRelativeAngle(radarTurn));
+       setTurnGunRightRadians(Utils.normalRelativeAngle(radarTurn));
+       
    }
    
    public void ramboMode() {
         fire(3);
    }
-   
-   public void radarAction() {
-        setTurnGunRight(loop);
-   }
-   
-   public void onBulletMissed(Bullet e) {
-       ready = false;
-   }
-   
+  
 }
