@@ -5,12 +5,13 @@
  */
 package robots;
 import robocode.*;
+import sun.awt.X11.XToolkit;
 
 /**
  *
  * @author itiel
  */
-public class AI_BotoX extends Robot {
+public class AI_BotoX extends AdvancedRobot {
     
     private double MAX_X;
     private double MAX_Y;
@@ -19,6 +20,9 @@ public class AI_BotoX extends Robot {
     private double hEAST = 90;
     private double hSOUTH = 180;
     private double hWEST = 270;
+    
+    private double loop = 60.0;
+    private boolean ready = false;
     
     
     public boolean LegalPos() {
@@ -77,13 +81,15 @@ public class AI_BotoX extends Robot {
        LookAtFront();
  
        while(true) {
-           ahead(1000);
-           turnRight(90);
+           setAhead(10000);
+           setTurnRight(90);
+           if(ready == false) radarAction();
+           execute();
        }
    }
 
    public void onHitByBullet(HitByBulletEvent e) {
-       turnLeft(180);
+       setAhead(100);
    }
    
    public void onDetectedRobot() {
@@ -91,19 +97,21 @@ public class AI_BotoX extends Robot {
    }
    
    public void onScannedRobot(ScannedRobotEvent e) {
-       ramboMode();
+       if(e.getDistance() < 500) {
+            ramboMode();
+       }
    }
    
    public void ramboMode() {
-       if(getEnergy() > 50) {
-            fire(2);
-            scan();
-            
-       }
-       else {
-            fire(1);
-            scan();
-       }       
+        fire(3);
    }
-    
+   
+   public void radarAction() {
+        setTurnGunRight(loop);
+   }
+   
+   public void onBulletMissed(Bullet e) {
+       ready = false;
+   }
+   
 }
