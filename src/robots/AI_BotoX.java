@@ -88,42 +88,37 @@ public class AI_BotoX extends Robot {
    
    @Override
    public void onHitWall(HitWallEvent event) {
+       
+       double actualHeading = getHeading();
 
-       // Vol anar més enllà de la pared dretana
+       // DRETA
         if (getX() >= HALF_X) {
                 if (getY() >= HALF_Y) {
                     if (getHeading() >= hNORTH && getHeading() <= hEAST) {
-                        turnLeft(90);
-                        out.println("UNO");
+                        turnRight(180-getHeading());
                     }else{
-                        turnLeft(180);
-                        out.println("DOS");
+                        turnLeft(180-getHeading());
                     }
                 }else{
                     if (getHeading() >= hEAST && getHeading() <= hSOUTH) {
-                        turnLeft(90);
-                        out.println("TRES");
+                        turnLeft(270-getHeading());
                     }else{
-                         turnLeft(180);
-                        out.println("QUATRO");
+                         turnLeft(270-getHeading());
                     }
                 }
+        // ESQUERRA
         }else{
                 if (getY() >= HALF_Y) {
                     if (getHeading() >= hNORTH && getHeading() <= hWEST) {
-                        turnLeft(90);
-                        out.println("CINCO");
+                        turnLeft(getHeading()-180);
                     }else{
-                        turnLeft(getHeading());
-                        out.println("SEIS");
+                        turnLeft(getHeading()-180);
                     }
                 }else{
                     if (getHeading() >= hNORTH && getHeading() <= hSOUTH) {
-                        turnLeft(90);
-                        out.println("SIETE");
+                        turnRight(getHeading()-90);
                     }else{
-                        turnLeft(getHeading());
-                        out.println("OCHO");
+                        turnRight(getHeading()-90);
                     }
                 }  
         }
