@@ -76,8 +76,7 @@ public class AI_BotoX extends Robot {
        LookAtFront();
  
        while(true) {
-           ahead(1000);
-           turnRight(90);
+           Move();
        }
    }
    public void onScannedRobot(ScannedRobotEvent e) {
