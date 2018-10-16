@@ -68,7 +68,8 @@ public class AI_BotoX extends Robot {
         }
     }
 
-   public void run() {
+    @Override
+    public void run() {
        
        MAX_X = getBattleFieldWidth();
        MAX_Y = getBattleFieldHeight();
@@ -79,12 +80,29 @@ public class AI_BotoX extends Robot {
            Move();
        }
    }
-   public void onScannedRobot(ScannedRobotEvent e) {
-       fire(1);
-       scan();
-   }
+
    public void onHitByBullet(HitByBulletEvent e) {
        turnLeft(180);
+   }
+   
+   public void onDetectedRobot() {
+       
+   }
+   
+   public void onScannedRobot(ScannedRobotEvent e) {
+       ramboMode();
+   }
+   
+   public void ramboMode() {
+       if(getEnergy() > 50) {
+            fire(2);
+            scan();
+            
+       }
+       else {
+            fire(1);
+            scan();
+       }       
    }
     
 }
