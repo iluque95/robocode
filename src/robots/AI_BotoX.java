@@ -37,10 +37,10 @@ public class AI_BotoX extends AdvancedRobot {
 	double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - position);
 	setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
 	
-        double gunTurnAmt = robocode.util.Utils.normalRelativeAngle(position - getGunHeadingRadians() + latVel/20);//amount to turn our gun, lead just a little bit
+        double gunTurnAmt = robocode.util.Utils.normalRelativeAngle(position - getGunHeadingRadians() + latVel/10);//
         setTurnGunRightRadians(gunTurnAmt); 
         
-        setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(position - getHeadingRadians() + latVel/getVelocity()));//drive towards the enemies predicted future location
+        setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(position - getHeadingRadians() + latVel/getVelocity()));
 	
         setAhead((e.getDistance() - 200));
         
