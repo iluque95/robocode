@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package robots;
+import java.awt.Color;
 import robocode.*;
 import robocode.util.Utils;
 
@@ -13,96 +14,41 @@ import robocode.util.Utils;
  */
 public class AI_BotoX extends AdvancedRobot {
     
-    private double MAX_X;
-    private double MAX_Y;
-    
-    private double hNORTH = 0;
-    private double hEAST = 90;
-    private double hSOUTH = 180;
-    private double hWEST = 270;
-    
-    private double loop = 60.0;
-    private boolean ready = false;
-    
-    
-    public boolean LegalPos() {
-        boolean legal = true;
-
-
-        if (getX() == MAX_X && getHeading() == hEAST) {
-            legal = false;
-        }else if(getX() == 0 && getHeading() == hWEST) {
-            legal = false;
-        }else if(getY() == MAX_Y && getHeading() == hNORTH) {
-            legal = false;
-        }else if(getY() == 0 && getHeading() == hSOUTH) {
-            legal = false;
-        }
-
-        return legal;
-
-    }
-    
-    public void Move() {
+    public void run() { 
+        // Robot Customization
+        setBodyColor(Color.BLUE);
+        setGunColor(Color.GRAY);
+        setRadarColor(Color.GRAY);
+        setBulletColor(Color.BLUE);
+            
+        // Robot adjust
+        setAdjustGunForRobotTurn(true);
+        setAdjustRadarForRobotTurn(true);
+        turnRadarRightRadians(Double.POSITIVE_INFINITY);
         
-        if (LegalPos()) {
-            LookAtFront();
-            ahead(100);
-            turnRight(90);
-            ahead(100);
-            turnLeft(90);
-            ahead(100);
-            turnRight(90);
-            ahead(100);
-            turnLeft(90);
-            ahead(100);
-        }else{
-            turnLeft(180);
-        }
-    }
-    
-    public void LookAtFront() {
-        
-        if (getHeading() == hSOUTH) {
-            turnLeft(180);
-        }else if(getHeading() == hWEST) {
-            turnLeft(90);
-        }else if(getHeading() == hEAST) {
-            turnRight(90);
+        while(true) {
+            scan();
+            execute();
         }
     }
 
-    @Override
-    public void run() {
-       
-       MAX_X = getBattleFieldWidth();
-       MAX_Y = getBattleFieldHeight();
+    public void onScannedRobot (ScannedRobotEvent e) {
+        double position = e.getBearingRadians()+getHeadingRadians();
+	double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - position);
+	setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
+	
+        double gunTurnAmt = robocode.util.Utils.normalRelativeAngle(position - getGunHeadingRadians() + latVel/20);//amount to turn our gun, lead just a little bit
+        setTurnGunRightRadians(gunTurnAmt); 
         
-       LookAtFront();        
-       
-       setAdjustRadarForGunTurn(true);
-       
-       setTurnRadarRight(Double.POSITIVE_INFINITY);
-       setTurnGunRight(Double.POSITIVE_INFINITY);
-       
-       
-       while(true) {
-           scan();
-           execute();  
-       }
-   }
-   
- 
-   public void onScannedRobot(ScannedRobotEvent e) {
-       double radarTurn = getHeadingRadians() + e.getBearingRadians() - getRadarHeadingRadians();
-       
-       setTurnRadarRightRadians(Utils.normalRelativeAngle(radarTurn));
-       setTurnGunRightRadians(Utils.normalRelativeAngle(radarTurn));
-       
-   }
-   
-   public void ramboMode() {
-        fire(3);
-   }
-  
+        setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(position - getHeadingRadians() + latVel/getVelocity()));//drive towards the enemies predicted future location
+	
+        setAhead((e.getDistance() - 200));
+        
+	if(e.getDistance() < 210 ) setFire(3);
+    }
+    
+    public void onHitWall(HitWallEvent e) {
+        setAhead(-1);
+    }
+    
 }
